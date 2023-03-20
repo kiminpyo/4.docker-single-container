@@ -17,3 +17,21 @@ jobs:
                   echo "start creating an image with dockerfile"
                   docker build -f Dockerfile.dev . -t rladlsvy/prod 
                   docker run -e CI=true rladlsvy/prod npm run test -- --coverage
+
+            - name: Upload deployment package to S3
+                uses: aws-actions/amazon-s3-upload@v2
+                with:
+                    region: us-east-1
+                    bucket-name: elasticbeanstalk-us-east-1-287092406568
+                    path: elasticbeanstalk-us-east-1-287092406568
+        
+            - name: Deploy to Elastic Beanstalk
+                uses: einaregilsson/beanstalk-deploy@v15
+                with:
+                    aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+                    aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    application_name: react-docker
+                    environment_name: ReactDocker-env
+                    region: us-east-1
+                    deployment_package: .
+                    wait_for_deployment: true
