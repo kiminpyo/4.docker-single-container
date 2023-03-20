@@ -18,10 +18,7 @@ jobs:
                   docker build -f Dockerfile.dev . -t rladlsvy/prod 
                   docker run -e CI=true rladlsvy/prod npm run test -- --coverage
         
-            - name: Upload deployment package to S3
-                run: |
-                    aws s3 cp elasticbeanstalk-us-east-1-287092406568 s3://elasticbeanstalk-us-east-1-287092406568 --region us-east-1
-
+           
             - name: Deploy to Elastic Beanstalk
                 uses: einaregilsson/beanstalk-deploy@v15
                 with:
