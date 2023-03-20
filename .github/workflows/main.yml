@@ -1,0 +1,19 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Build and Test
+              run: |
+                  echo "start creating an image with dockerfile"
+                  docker build -f Dockerfile.dev . -t rladlsvy/prod 
+                  docker run -e CI=true rladlsvy/prod npm run test -- --coverage

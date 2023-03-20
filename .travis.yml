@@ -1,0 +1,15 @@
+sudo: required
+
+language: generic
+
+services:
+    - docker
+
+before_install: -echo "start Creating an image with dockerfile"
+    -docker build -t rladlsvy/prod -f Dockerfile.dev .
+
+script:
+    - docker run -e CI=true rladlsvy/prod npm run test -- --covearge
+
+after_success:
+    - echo "Test success"
