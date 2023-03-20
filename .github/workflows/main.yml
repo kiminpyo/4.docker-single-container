@@ -17,8 +17,10 @@ jobs:
                   echo "start creating an image with dockerfile"
                   docker build -f Dockerfile.dev . -t rladlsvy/prod 
                   docker run -e CI=true rladlsvy/prod npm run test -- --coverage
-        
-           
+
+            - name: Generate deployment package
+                run: zip -r deploy.zip . -x '*.git*'
+
             - name: Deploy to Elastic Beanstalk
                 uses: einaregilsson/beanstalk-deploy@v21
                 with:
@@ -28,3 +30,4 @@ jobs:
                     environment_name: ReactDocker-env
                     region: us-east-1
                     wait_for_deployment: true
+                    deployment_package: deploy.zip
