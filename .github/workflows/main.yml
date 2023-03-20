@@ -17,14 +17,11 @@ jobs:
                   echo "start creating an image with dockerfile"
                   docker build -f Dockerfile.dev . -t rladlsvy/prod 
                   docker run -e CI=true rladlsvy/prod npm run test -- --coverage
-
-            - name: Upload deployment package to S3
-                uses: aws-actions/amazon-s3-upload@v2
-                with:
-                    region: us-east-1
-                    bucket-name: elasticbeanstalk-us-east-1-287092406568
-                    path: elasticbeanstalk-us-east-1-287092406568
         
+            - name: Upload deployment package to S3
+                run: |
+                    aws s3 cp elasticbeanstalk-us-east-1-287092406568 s3://elasticbeanstalk-us-east-1-287092406568 --region us-east-1
+
             - name: Deploy to Elastic Beanstalk
                 uses: einaregilsson/beanstalk-deploy@v15
                 with:
