@@ -27,4 +27,4 @@ jobs:
 
             - name: Tests Success
               if: success()
-              run: echo "Tests Success"
+              run: echo "Tests success"
