@@ -12,4 +12,4 @@ before_install:
 script:
     - docker run -e CI=true rladlsvy/single npm run test -- --coverage
 
-after_success: -echo "Test Success"
+after_success: -echo "Tests Success"
