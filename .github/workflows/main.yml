@@ -42,7 +42,7 @@ jobs:
               run: |
                   aws elasticbeanstalk create-application-version --application-name docker-react-app-basic --version-label ${GITHUB_SHA} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-287092406568",S3Key="Dockerfile.zip"
                   aws elasticbeanstalk update-environment --environment-name Dockerreactappbasic-env --version-label ${GITHUB_SHA}
-           
-             - name: Upload files to S3
+
+            - name: Upload files to S3
               run: |
                   aws s3 sync 4.docker-single-container/ s3://elasticbeanstalk-us-east-1-287092406568/ --delete
