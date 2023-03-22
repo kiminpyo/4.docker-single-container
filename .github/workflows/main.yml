@@ -25,3 +25,28 @@ jobs:
             - name: Tests Success
               if: success()
               run: echo "Tests success"
+
+            - name: Set up AWS CLI
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-1
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Tag and push Docker image to Amazon ECR
+              run: |
+                  docker tag rladlsvy/single:latest ${{ steps.login-ecr.outputs.registry }}/rladlsvy/single:latest
+                  docker push ${{ steps.login-ecr.outputs.registry }}/rladlsvy/single:latest
+
+            - name: Deploy to Elastic Beanstalk
+              run: |
+                  aws elasticbeanstalk create-application-version --application-name docker-react-app-basic --version-label ${GITHUB_SHA} --source-bundle S3Bucket="${{ steps.login-ecr.outputs.registry }}",S3Key="rladlsvy/single:${GITHUB_SHA}.zip"
+                  aws elasticbeanstalk update-environment --environment-name Dockerreactappbasic-env --version-label ${GITHUB_SHA}
+
+            - name: Upload files to S3
+              run: |
+                  aws s3 sync 4.docker-single-container/ s3://elasticbeanstalk-us-east-1-287092406568/ --delete
