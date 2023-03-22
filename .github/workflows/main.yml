@@ -24,7 +24,7 @@ jobs:
 
             - name: Tests Success
               if: success()
-              run: echo "Tests success"
+              run: echo " success"
 
             - name: Set up AWS CLI
               uses: aws-actions/configure-aws-credentials@v1
