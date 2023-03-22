@@ -33,14 +33,10 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-east-1
 
-            - name: Login to Amazon ECR
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v1
-
-            - name: Tag and push Docker image to Amazon ECR
+            - name: Zip and upload Dockerfile to S3
               run: |
-                  docker tag rladlsvy/single:latest ${{ steps.login-ecr.outputs.registry }}/rladlsvy/single:latest
-                  docker push ${{ steps.login-ecr.outputs.registry }}/rladlsvy/single:latest
+                  zip -r Dockerfile.zip Dockerfile.dev
+                  aws s3 cp Dockerfile.zip s3://elasticbeanstalk-us-east-1-287092406568/
 
             - name: Deploy to Elastic Beanstalk
               run: |
