@@ -45,4 +45,4 @@ jobs:
 
             - name: Upload files to S3
               run: |
-                  aws s3 sync 4.docker-single-container/ s3://elasticbeanstalk-us-east-1-287092406568/ --delete
+                  aws s3 sync . s3://elasticbeanstalk-us-east-1-***/ --delete
